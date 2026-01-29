@@ -26,3 +26,23 @@ const initialCards = [
 ];
 
 initialCards.forEach((element) => console.log(element.name));
+
+const openModalInfo = document.querySelector("#edit-popup");
+const editInfo = document.querySelector(".profile__edit-button");
+const closeButton = openModalInfo.querySelector(".popup__close"); // Nueva variable
+
+function openModal(modal) {
+  modal.classList.add("popup_is-opened");
+}
+
+function closeModal(modal) {
+  modal.classList.remove("popup_is-opened");
+}
+
+editInfo.addEventListener("click", () => {
+  openModal(openModalInfo);
+});
+
+closeButton.addEventListener("click", () => {
+  closeModal(openModalInfo);
+});
