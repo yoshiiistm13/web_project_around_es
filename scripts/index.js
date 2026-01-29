@@ -46,3 +46,33 @@ editInfo.addEventListener("click", () => {
 closeButton.addEventListener("click", () => {
   closeModal(openModalInfo);
 });
+
+const nameInput = document.querySelector(".popup__input_type_name");
+const jobInput = document.querySelector(".popup__input_type_description");
+const profileTitle = document.querySelector(".profile__title");
+const profileDescription = document.querySelector(".profile__description");
+
+// --------------------------------------
+
+function fillProfileForm() {
+  console.log("fillProfileForm se está ejecutando"); // ← Agrega esto
+
+  const currentName = profileTitle.textContent;
+  const currentJob = profileDescription.textContent;
+
+  console.log("Nombre actual:", currentName); // ← Y esto
+  console.log("Trabajo actual:", currentJob); // ← Y esto
+
+  nameInput.value = currentName;
+  jobInput.value = currentJob;
+}
+
+function handleOpenEditModal() {
+  fillProfileForm(); // Primero llena el formulario
+  openModal(openModalInfo); // Luego abre el modal
+}
+
+const editButton = document.querySelector(".profile__edit-button");
+editButton.addEventListener("click", handleOpenEditModal);
+
+// --------------------------------------
