@@ -76,3 +76,53 @@ const editButton = document.querySelector(".profile__edit-button");
 editButton.addEventListener("click", handleOpenEditModal);
 
 // --------------------------------------
+
+// Buscamos el formulario en el DOM
+let formElement = document.querySelector("#edit-profile-form");
+
+function handleProfileFormSubmit(evt) {
+  evt.preventDefault();
+
+  // 1. Obtén los valores de cada campo desde la propiedad value
+  // (Asumiendo que ya definiste nameInput y jobInput previamente)
+  const nameValue = nameInput.value;
+  const jobValue = jobInput.value;
+
+  // 2. Selecciona los elementos donde se introducirán los valores
+  const profileTitle = document.querySelector(".profile__title");
+  const profileDescription = document.querySelector(".profile__description");
+
+  // 3. Inserta nuevos valores utilizando la propiedad textContent
+  profileTitle.textContent = nameValue;
+  profileDescription.textContent = jobValue;
+
+  // Opcional: cierra el popup tras guardar (puedes usar una función que ya tengas)
+  // togglePopup(document.querySelector("#edit-popup"));
+
+  const popupElement = document.querySelector("#edit-popup");
+  popupElement.classList.remove("popup_opened");
+}
+
+// Conectamos el manejador al formulario:
+formElement.addEventListener("submit", handleProfileFormSubmit);
+
+const cardTemplate = document.querySelector("#template__card");
+
+function getCardElement(name, link) {
+  const cardElement = cardTemplate.content.cloneNode(true);
+  const titulo = cardElement.querySelector(".card__title");
+  const imagen = cardElement.querySelector(".card__image");
+
+  return cardElement;
+}
+
+const cardsContainer = document.querySelector(".cards__list");
+
+function renderCard(name, link, container) {
+  const newCard = getCardElement(name, link);
+  container.prepend(newCard);
+}
+
+initialCards.forEach((card) => {
+  renderCard(card.name, card.link, cardsContainer);
+});
