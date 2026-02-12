@@ -109,11 +109,37 @@ formElement.addEventListener("submit", handleProfileFormSubmit);
 const cardTemplate = document.querySelector("#template__card");
 
 function getCardElement(name, link) {
-  const cardElement = cardTemplate.content.cloneNode(true);
-  const titulo = cardElement.querySelector(".card__title");
-  const imagen = cardElement.querySelector(".card__image");
+  // Buscamos el elemento .card dentro del template y lo clonamos
+  const cardElement = cardTemplate.content
+    .querySelector(".card")
+    .cloneNode(true);
+
+  const likeButton = cardElement.querySelector(".card__like-button");
+  const deleteButton = cardElement.querySelector(".card__delete-button"); // Ya que está en tu HTML, lo seleccionamos
+  const cardTitle = cardElement.querySelector(".card__title");
+  const cardImage = cardElement.querySelector(".card__image");
+
+  cardTitle.textContent = name;
+  cardImage.src = link;
+  cardImage.alt = name;
+
+  // Manejador del botón Like
+  likeButton.addEventListener("click", (evt) => {
+    evt.target.classList.toggle("card__like-button_is-active");
+  });
+
+  // Manejador del botón Eliminar (opcional, pero recomendado)
+  deleteButton.addEventListener("click", () => {
+    cardElement.remove();
+  });
 
   return cardElement;
+}
+
+// 5. Implementar la función handler (controlador) por separado para mayor orden
+function handleLikeIcon(evt) {
+  // evt.target se refiere al botón exacto que recibió el clic
+  evt.target.classList.toggle("card__like-button_is-active");
 }
 
 const cardsContainer = document.querySelector(".cards__list");
@@ -125,4 +151,90 @@ function renderCard(name, link, container) {
 
 initialCards.forEach((card) => {
   renderCard(card.name, card.link, cardsContainer);
+});
+
+const addCardButton = document.querySelector(".profile__add-button");
+
+const openNewModal = document.querySelector("#new-card-popup");
+
+addCardButton.addEventListener("click", function () {
+  openModal(openNewModal);
+
+  const deleteButton = cardElement.querySelector(".card__delete-button");
+
+  deleteButton.addEventListener("click", function () {
+    cardElement.remove();
+  });
+});
+
+// 1. Seleccionamos el modal específico por su ID
+const addCardPopup = document.querySelector("#new-card-popup");
+// 2. Seleccionamos el botón de cerrar que está DENTRO de ese modal
+const closeAddCardButton = addCardPopup.querySelector(".popup__close");
+// 3. Configuramos el evento para cerrar
+closeAddCardButton.addEventListener("click", function () {
+  closeModal(addCardPopup);
+});
+
+const newCardForm = document.querySelector("#new-card-form");
+
+function handleCardFormSubmit(evt) {
+  evt.preventDefault();
+
+  const nameValue = newCardForm.querySelector(
+    ".popup__input_type_card-name",
+  ).value;
+  const linkValue = newCardForm.querySelector(".popup__input_type_url").value;
+
+  // Renderizamos la nueva tarjeta
+  renderCard(nameValue, linkValue, cardsContainer);
+
+  // Limpiamos y cerramos
+  newCardForm.reset();
+  closeModal(openNewModal);
+}
+
+newCardForm.addEventListener("submit", handleCardFormSubmit);
+
+const imagePopup = document.querySelector("#image-popup");
+const popupImage = imagePopup.querySelector(".popup__image");
+const popupCaption = imagePopup.querySelector(".popup__caption");
+const closeImagePopupButton = imagePopup.querySelector(".popup__close");
+
+function getCardElement(name, link) {
+  const cardElement = cardTemplate.content
+    .querySelector(".card")
+    .cloneNode(true);
+  const cardImage = cardElement.querySelector(".card__image");
+  const cardTitle = cardElement.querySelector(".card__title");
+
+  // ... (aquí mantienes tus selectores de like y delete)
+
+  // CONFIGURACIÓN DEL DETECTOR DE CLICS EN LA IMAGEN (PASO 2)
+  cardImage.addEventListener("click", function () {
+    // 1. Establecer el texto del elemento caption del modal
+    popupCaption.textContent = name;
+
+    // 2. Establecer el src del elemento image del modal
+    popupImage.src = link;
+
+    // 3. Establecer el alt del elemento image del modal
+    popupImage.alt = name;
+
+    // 4. Abrir el modal. Utiliza tu función openModal().
+    openModal(imagePopup);
+  });
+
+  // No olvides llenar los datos de la tarjeta pequeña también
+  cardTitle.textContent = name;
+  cardImage.src = link;
+  cardImage.alt = name;
+
+  return cardElement;
+}
+
+// Establecemos el detector de clics para cerrar el modal
+closeImagePopupButton.addEventListener("click", function () {
+  // Cuando se haga clic en el botón de cerrar, el modal debe cerrarse
+  closeModal(imagePopup);
 });
