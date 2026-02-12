@@ -207,31 +207,35 @@ function getCardElement(name, link) {
     .cloneNode(true);
   const cardImage = cardElement.querySelector(".card__image");
   const cardTitle = cardElement.querySelector(".card__title");
+  const likeButton = cardElement.querySelector(".card__like-button");
+  const deleteButton = cardElement.querySelector(".card__delete-button");
 
-  // ... (aquí mantienes tus selectores de like y delete)
-
-  // CONFIGURACIÓN DEL DETECTOR DE CLICS EN LA IMAGEN (PASO 2)
-  cardImage.addEventListener("click", function () {
-    // 1. Establecer el texto del elemento caption del modal
-    popupCaption.textContent = name;
-
-    // 2. Establecer el src del elemento image del modal
-    popupImage.src = link;
-
-    // 3. Establecer el alt del elemento image del modal
-    popupImage.alt = name;
-
-    // 4. Abrir el modal. Utiliza tu función openModal().
-    openModal(imagePopup);
-  });
-
-  // No olvides llenar los datos de la tarjeta pequeña también
   cardTitle.textContent = name;
   cardImage.src = link;
   cardImage.alt = name;
 
+  // Lógica de Like
+  likeButton.addEventListener("click", () => {
+    likeButton.classList.toggle("card__like-button_is-active");
+  });
+
+  // Lógica de Eliminar (¡Aquí está la solución!)
+  deleteButton.addEventListener("click", () => {
+    cardElement.remove();
+  });
+
+  // Lógica de Zoom
+  cardImage.addEventListener("click", () => {
+    popupCaption.textContent = name;
+    popupImage.src = link;
+    popupImage.alt = name;
+    openModal(imagePopup);
+  });
+
   return cardElement;
 }
+
+// Seleccionamos el botón de cerrar del modal de imagen (si no lo habías hecho en el Paso 1)
 
 // Establecemos el detector de clics para cerrar el modal
 closeImagePopupButton.addEventListener("click", function () {
