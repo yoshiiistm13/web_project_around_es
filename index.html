@@ -74,13 +74,24 @@
               name="name"
               placeholder="Nombre"
               type="text"
+              required
+              minlength="2"
+              maxlength="40"
             />
+            <span class="popup__error" id="name-error"></span>
+
             <input
               class="popup__input popup__input_type_description"
               name="description"
               placeholder="Acerca de mí"
               type="text"
+              required
+              minlength="2"
+              maxlength="200"
             />
+
+            <span class="popup__error" id="job-error"></span>
+
             <button class="button popup__button" type="submit">Guardar</button>
           </form>
         </div>
@@ -98,8 +109,10 @@
               class="popup__input popup__input_type_card-name"
               name="place-name"
               placeholder="Título"
-              required
               type="text"
+              required
+              minlength="2"
+              maxlength="30"
             />
             <input
               class="popup__input popup__input_type_url"
@@ -107,6 +120,8 @@
               placeholder="Enlace a la imagen"
               required
               type="url"
+              minlength="2"
+              maxlength="200"
             />
             <button class="button popup__button" type="submit">Crear</button>
           </form>

@@ -47,10 +47,53 @@ closeButton.addEventListener("click", () => {
   closeModal(openModalInfo);
 });
 
-const nameInput = document.querySelector(".popup__input_type_name");
-const jobInput = document.querySelector(".popup__input_type_description");
 const profileTitle = document.querySelector(".profile__title");
 const profileDescription = document.querySelector(".profile__description");
+
+const jobInput = document.querySelector(".popup__input_type_description");
+const nameInput = document.querySelector(".popup__input_type_name");
+const btnGuardarPerfil = document.querySelector(".popup__button");
+
+const errorElement = document.querySelector("#name-error");
+const errorJob = document.querySelector("#job-error");
+
+nameInput.addEventListener("input", function () {
+  if (!nameInput.validity.valid) {
+    errorElement.textContent = nameInput.validationMessage;
+    errorElement.classList.add("visible");
+    nameInput.classList.add("popup__input_type_error");
+    btnGuardarPerfil.disabled = true;
+    btnGuardarPerfil.classList.add("button_inactive");
+  } else {
+    errorElement.textContent = "";
+    errorElement.classList.remove("visible");
+
+    // AQUÍ: Solo activa si el OTRO input (jobInput) también es válido
+    if (jobInput.validity.valid) {
+      btnGuardarPerfil.disabled = false;
+      btnGuardarPerfil.classList.remove("button_inactive");
+    }
+  }
+});
+
+jobInput.addEventListener("input", function () {
+  if (!jobInput.validity.valid) {
+    errorJob.textContent = jobInput.validationMessage;
+    errorJob.classList.add("visible");
+    jobInput.classList.add("popup__input_type_error");
+    btnGuardarPerfil.disabled = true;
+    btnGuardarPerfil.classList.add("button_inactive");
+  } else {
+    errorJob.textContent = "";
+    errorJob.classList.remove("visible");
+
+    // AQUÍ: Solo activa si el OTRO input (nameInput) también es válido
+    if (nameInput.validity.valid) {
+      btnGuardarPerfil.disabled = false;
+      btnGuardarPerfil.classList.remove("button_inactive");
+    }
+  }
+});
 
 // --------------------------------------
 

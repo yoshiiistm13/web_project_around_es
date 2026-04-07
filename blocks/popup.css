@@ -157,3 +157,36 @@
     padding: 0;
   }
 }
+
+/* El contenedor del error por defecto */
+#name-error {
+  color: red; /* Color del texto */
+  font-size: 12px; /* Tamaño pequeño */
+  display: none; /* Oculto por defecto */
+}
+
+/* Cuando le añades la clase 'visible' en JS */
+#name-error.visible {
+  display: block; /* Se muestra en pantalla */
+}
+
+#job-error {
+  color: red;
+  font-size: 12px;
+  display: none;
+}
+
+#job-error.visible {
+  display: block;
+}
+
+/* La línea roja que pediste */
+.popup__input_type_error {
+  border-bottom-color: red !important;
+}
+
+/* El texto del mensaje en rojo */
+.visible {
+  color: red;
+  display: block; /* Para asegurar que se vea */
+}
