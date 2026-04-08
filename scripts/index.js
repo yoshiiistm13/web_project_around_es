@@ -364,3 +364,4 @@ const newCardPopup = document.querySelector("#new-card-popup");
 openNewModalButton.addEventListener("click", () => {
   openModal(newCardPopup);
 });
+//
