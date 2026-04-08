@@ -180,6 +180,26 @@
   display: block;
 }
 
+#title-error {
+  color: red;
+  font-size: 12px;
+  display: none;
+}
+
+#title-error.visible {
+  display: block;
+}
+
+#image-error {
+  color: red;
+  font-size: 12px;
+  display: none;
+}
+
+#image-error.visible {
+  display: block;
+}
+
 /* La línea roja que pediste */
 .popup__input_type_error {
   border-bottom-color: red !important;

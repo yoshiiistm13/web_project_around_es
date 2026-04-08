@@ -87,12 +87,57 @@ jobInput.addEventListener("input", function () {
     errorJob.textContent = "";
     errorJob.classList.remove("visible");
 
-    // AQUÍ: Solo activa si el OTRO input (nameInput) también es válido
     if (nameInput.validity.valid) {
       btnGuardarPerfil.disabled = false;
       btnGuardarPerfil.classList.remove("button_inactive");
     }
   }
+});
+
+const titleInput = document.querySelector(".popup__input_type_card-name");
+const imageInput = document.querySelector(".popup__input_type_url");
+const btnGuardarLugar = document.querySelector(".button.popup__button");
+
+const errorTitle = document.querySelector("#title-error");
+const errorImage = document.querySelector("#image-error");
+
+// 1. Definimos la función para controlar el estado del botón
+const toggleButtonState = () => {
+  if (titleInput.validity.valid && imageInput.validity.valid) {
+    btnGuardarLugar.disabled = false;
+    btnGuardarLugar.classList.remove("button_inactive");
+  } else {
+    btnGuardarLugar.disabled = true;
+    btnGuardarLugar.classList.add("button_inactive");
+  }
+};
+
+titleInput.addEventListener("input", function () {
+  if (!titleInput.validity.valid) {
+    errorTitle.textContent = titleInput.validationMessage;
+    errorTitle.classList.add("visible");
+    titleInput.classList.add("popup__input_type_error");
+  } else {
+    errorTitle.textContent = "";
+    errorTitle.classList.remove("visible");
+    titleInput.classList.remove("popup__input_type_error");
+  }
+  // 2. Llamamos a la función en cada cambio
+  toggleButtonState();
+});
+
+imageInput.addEventListener("input", function () {
+  if (!imageInput.validity.valid) {
+    errorImage.textContent = imageInput.validationMessage;
+    errorImage.classList.add("visible");
+    imageInput.classList.add("popup__input_type_error");
+  } else {
+    errorImage.textContent = "";
+    errorImage.classList.remove("visible");
+    imageInput.classList.remove("popup__input_type_error");
+  }
+  // 2. Llamamos a la función en cada cambio
+  toggleButtonState();
 });
 
 // --------------------------------------
