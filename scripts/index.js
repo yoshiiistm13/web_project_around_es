@@ -188,7 +188,7 @@ function handleProfileFormSubmit(evt) {
   // togglePopup(document.querySelector("#edit-popup"));
 
   const popupElement = document.querySelector("#edit-popup");
-  popupElement.classList.remove("popup_opened");
+  closeModal(popupElement);
 }
 
 // Conectamos el manejador al formulario:
@@ -196,7 +196,7 @@ formElement.addEventListener("submit", handleProfileFormSubmit);
 
 const cardTemplate = document.querySelector("#template__card");
 
-function getCardElement(name, link) {
+function getCardElement() {
   // Buscamos el elemento .card dentro del template y lo clonamos
   const cardElement = cardTemplate.content
     .querySelector(".card")
@@ -329,4 +329,38 @@ function getCardElement(name, link) {
 closeImagePopupButton.addEventListener("click", function () {
   // Cuando se haga clic en el botón de cerrar, el modal debe cerrarse
   closeModal(imagePopup);
+});
+
+// Seleccionamos todos los popups de la página
+const popups = document.querySelectorAll(".popup");
+
+popups.forEach((popup) => {
+  popup.addEventListener("mousedown", (evt) => {
+    // Si el clic es en el fondo oscuro (clase popup) o en el botón cerrar (clase popup__close)
+    if (
+      evt.target.classList.contains("popup") ||
+      evt.target.classList.contains("popup__close")
+    ) {
+      closeModal(popup);
+    }
+  });
+});
+
+// Función para cerrar con la tecla Escape
+document.addEventListener("keydown", (evt) => {
+  if (evt.key === "Escape") {
+    // Buscamos el popup que esté abierto en ese momento
+    const openedPopup = document.querySelector(".popup_is-opened");
+    if (openedPopup) {
+      closeModal(openedPopup);
+    }
+  }
+});
+
+// Evento para abrir el popup de "Nuevo Lugar" que se cortó en tu mensaje
+const openNewModalButton = document.querySelector(".profile__add-button");
+const newCardPopup = document.querySelector("#new-card-popup");
+
+openNewModalButton.addEventListener("click", () => {
+  openModal(newCardPopup);
 });
