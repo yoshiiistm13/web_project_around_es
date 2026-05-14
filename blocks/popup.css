@@ -206,7 +206,16 @@
 }
 
 /* El texto del mensaje en rojo */
-.visible {
+.popup__button_disabled {
   color: red;
   display: block; /* Para asegurar que se vea */
+}
+
+/* Esta es la clase que el validador añade al botón */
+.button_inactive {
+  background-color: transparent !important;
+  border: 1px solid rgba(0, 0, 0, 0.2) !important;
+  color: rgba(0, 0, 0, 0.2) !important;
+  cursor: default !important;
+  pointer-events: none; /* Esto evita que funcione el :hover */
 }
