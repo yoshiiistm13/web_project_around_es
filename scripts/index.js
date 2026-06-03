@@ -1,47 +1,13 @@
 import Card from "./Card.js";
 import FormValidator from "./FormValidator.js";
-import PopupWithImage from "./PopupWithImage.js"; // 👈 Nueva importación
-import PopupWithForm from "./PopupWithForm.js"; // 👈 Nueva importación
-import UserInfo from "./UserInfo.js"; // 👈 Nueva importación
+import PopupWithImage from "./PopupWithImage.js";
+import PopupWithForm from "./PopupWithForm.js";
+import UserInfo from "./UserInfo.js";
 
-const initialCards = [
-  {
-    name: "Valle de Yosemite",
-    link: "https://practicum-content.s3.us-west-1.amazonaws.com/web-code/moved_yosemite.jpg",
-  },
-  {
-    name: "Lago Louise",
-    link: "https://practicum-content.s3.us-west-1.amazonaws.com/web-code/moved_lake-louise.jpg",
-  },
-  {
-    name: "Montañas Calvas",
-    link: "https://practicum-content.s3.us-west-1.amazonaws.com/web-code/moved_bald-mountains.jpg",
-  },
-  {
-    name: "Latemar",
-    link: "https://practicum-content.s3.us-west-1.amazonaws.com/web-code/moved_latemar.jpg",
-  },
-  {
-    name: "Parque Nacional de la Vanoise",
-    link: "https://practicum-content.s3.us-west-1.amazonaws.com/web-code/moved_vanoise.jpg",
-  },
-  {
-    name: "Lago di Braies",
-    link: "https://practicum-content.s3.us-west-1.amazonaws.com/web-code/moved_lago.jpg",
-  },
-];
+// Importamos únicamente los datos puros desde el archivo de constantes
+import { initialCards, validationConfig } from "./constants.js";
 
-// Configuración para validación
-const validationConfig = {
-  formSelector: ".popup__form",
-  inputSelector: ".popup__input",
-  submitButtonSelector: ".popup__button",
-  inactiveButtonClass: "button_inactive",
-  inputErrorClass: "popup__input_type_error",
-  errorClass: "visible",
-};
-
-// Selectores del DOM
+// --- SELECTORES DEL DOM ---
 const cardsContainer = document.querySelector(".cards__list");
 const profileEditButton = document.querySelector(".profile__edit-button");
 const addCardButton = document.querySelector(".profile__add-button");
@@ -58,45 +24,48 @@ const userInfo = new UserInfo({
 const imagePopupInstance = new PopupWithImage("#image-popup");
 imagePopupInstance.setEventListeners();
 
-// --- 3. FUNCIÓN REFACTORIZADA PARA CREAR TARJETAS ---
+// --- 3. FUNCIÓN PARA GENERAR TARJETAS ---
 function createCard(data) {
-  // 💥 ¡SOLUCIÓN! Pasamos la función flecha como tercer parámetro conectando la tarjeta al popup
   const card = new Card(data, "#template__card", (name, link) => {
     imagePopupInstance.open(name, link);
   });
   return card.generateCard();
 }
 
-// Renderizar tarjetas iniciales
+// Renderizado inicial mediante el recorrido de los datos importados
 initialCards.forEach((item) => {
   cardsContainer.append(createCard(item));
 });
 
 // --- 4. INSTANCIAS DE POPUPWITHFORM ---
 
-// Popup de Editar Perfil
+// Popup para Editar Perfil
 const editProfilePopup = new PopupWithForm("#edit-popup", (formData) => {
-  // formData contiene { name: "...", description: "..." } automáticamente de los inputs
   userInfo.setUserInfo(formData);
 });
 editProfilePopup.setEventListeners();
 
-// Popup de Nuevo Lugar
+// Popup para Agregar Nuevo Lugar
 const newCardPopup = new PopupWithForm("#new-card-popup", (formData) => {
-  // formData contiene { "place-name": "...", link: "..." } automáticamente
   const name = formData["place-name"];
   const link = formData.link;
-
   cardsContainer.prepend(createCard({ name, link }));
 });
 newCardPopup.setEventListeners();
 
-// --- 5. EVENTOS DE APERTURA ---
+// --- 5. INSTANCIAS DE VALIDACIÓN ---
+const editProfileValidator = new FormValidator(validationConfig, profileForm);
+const addCardValidator = new FormValidator(validationConfig, addCardForm);
+
+editProfileValidator.setEventListeners();
+addCardValidator.setEventListeners();
+
+// --- 6. DETECTORES DE EVENTOS DE APERTURA ---
 
 profileEditButton.addEventListener("click", () => {
   const currentUserData = userInfo.getUserInfo();
 
-  // Rellenamos los campos de texto con los datos guardados en la clase UserInfo
+  // Cargamos los valores vigentes del perfil en los inputs antes de mostrar el formulario
   document.querySelector(".popup__input_type_name").value =
     currentUserData.name;
   document.querySelector(".popup__input_type_description").value =
@@ -108,10 +77,3 @@ profileEditButton.addEventListener("click", () => {
 addCardButton.addEventListener("click", () => {
   newCardPopup.open();
 });
-
-// --- 6. INSTANCIAR VALIDACIÓN ---
-const editProfileValidator = new FormValidator(validationConfig, profileForm);
-const addCardValidator = new FormValidator(validationConfig, addCardForm);
-
-editProfileValidator.setEventListeners();
-addCardValidator.setEventListeners();
