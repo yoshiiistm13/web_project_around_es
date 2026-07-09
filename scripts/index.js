@@ -7,6 +7,12 @@ import UserInfo from "./UserInfo.js";
 import { validationConfig } from "./constants.js";
 import Api from "./Api.js";
 
+import PopupWithConfirmation from "./PopupWithConfirmation.js"; // 1. Importas
+
+// 2. Instancias abajo de tus otras constantes
+const confirmationPopup = new PopupWithConfirmation("#PopupWithConfirmation");
+confirmationPopup.setEventListeners();
+
 const api = new Api({
   baseUrl: "https://around-api.es.tripleten-services.com/v1",
   headers: {
@@ -40,14 +46,13 @@ api
   })
   .catch((err) => console.error("Error en usuario:", err));
 
-// Metodo 2. Cargar las tarjetas desde el servidor (Solo para monitoreo en consola)
+// Metodo 2. Cargar las tarjetas desde el servidor
 api
   .getUserCard()
   .then((cardsData) => {
     console.log("Tarjetas recibidas desde el servidor:", cardsData);
 
-    // ◄ LA PIEZA FALTANTE: Recorremos las tarjetas guardadas en el servidor
-    // y las inyectamos en tu contenedor visual al cargar la página
+    // Recorremos las tarjetas guardadas en el servidor e inyectamos
     cardsData.forEach((item) => {
       cardsContainer.append(createCard(item));
     });
@@ -63,7 +68,7 @@ api
 const imagePopupInstance = new PopupWithImage("#image-popup");
 imagePopupInstance.setEventListeners();
 
-// --- 3. FUNCIÓN PARA GENERAR TARJETAS (CON LOGICA DE LIKE INCLUIDA) ---
+// --- 3. FUNCIÓN PARA GENERAR TARJETAS (CON LOGICA DE LIKE Y BORRADO INCLUIDA) ---
 function createCard(data) {
   const card = new Card(
     data,
@@ -78,6 +83,22 @@ function createCard(data) {
           cardInstance.updateLikes(updatedCardData.isLiked);
         })
         .catch((err) => console.error("Error al actualizar el like:", err));
+    },
+    (cardId, cardInstance) => {
+      // ◄ ¡CORREGIDO! Agregamos el 5to parámetro
+      console.log(
+        "¡Click en papelera detectado en index.js para la tarjeta con ID:",
+        cardId,
+      );
+
+      // Pasamos la acción al robot de confirmación
+      confirmationPopup.setAction(() => {
+        cardInstance.removeCardFromDOM();
+        confirmationPopup.close();
+      });
+
+      // Abrimos el popup visualmente
+      confirmationPopup.open();
     },
   );
   return card.generateCard();
@@ -112,7 +133,7 @@ const editProfilePopup = new PopupWithForm("#edit-popup", (formData) => {
       );
     });
 });
-editProfilePopup.setEventListeners(); // ¡Aseguramos que escuche el submit!
+editProfilePopup.setEventListeners();
 
 // Popup para Agregar Nuevo Lugar (Ejercicio 4)
 const newCardPopup = new PopupWithForm("#new-card-popup", (formData) => {
