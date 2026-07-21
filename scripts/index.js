@@ -1,18 +1,15 @@
+// scripts/index.js
+
 import Card from "./Card.js";
 import FormValidator from "./FormValidator.js";
 import PopupWithImage from "./PopupWithImage.js";
 import PopupWithForm from "./PopupWithForm.js";
 import UserInfo from "./UserInfo.js";
-
-import { validationConfig } from "./constants.js";
 import Api from "./Api.js";
-
 import PopupWithConfirmation from "./PopupWithConfirmation.js";
+import { validationConfig } from "./constants.js";
 
-// --- INSTANCIA DEL POPUP DE CONFIRMACIÓN ---
-const confirmationPopup = new PopupWithConfirmation("#PopupWithConfirmation");
-confirmationPopup.setEventListeners();
-
+// --- INSTANCIA DE API ---
 const api = new Api({
   baseUrl: "https://around-api.es.tripleten-services.com/v1",
   headers: {
@@ -25,39 +22,45 @@ const api = new Api({
 const cardsContainer = document.querySelector(".cards__list");
 const profileEditButton = document.querySelector(".profile__edit-button");
 const addCardButton = document.querySelector(".profile__add-button");
+const avatarContainer = document.querySelector(".profile__avatar-container");
+
 const profileForm = document.querySelector("#edit-profile-form");
 const addCardForm = document.querySelector("#new-card-form");
+const avatarForm = document.querySelector("#avatar-form");
+
+// --- INSTANCIA DE POPUP DE CONFIRMACIÓN ---
+const confirmationPopup = new PopupWithConfirmation("#PopupWithConfirmation");
+confirmationPopup.setEventListeners();
 
 // --- INSTANCIA DE USERINFO ---
 const userInfo = new UserInfo({
   nameSelector: ".profile__title",
   jobSelector: ".profile__description",
+  avatarSelector: ".profile__image",
 });
 
 // --- VARIABLE GLOBAL PARA EL ID DE USUARIO ---
 let userId = null;
 
-// --- CARGA EN CADENA ESTÁNDAR (Método 1 y Método 2 anidados) ---
+// --- CARGA DE DATOS INICIALES DEL SERVIDOR ---
 api
   .getUserInfo()
   .then((userData) => {
     console.log("¡Datos del usuario recibidos!", userData);
 
-    // 1. Guardamos tu ID único de usuario de forma global
     userId = userData._id;
 
     userInfo.setUserInfo({
       name: userData.name,
       description: userData.about,
+      avatar: userData.avatar,
     });
 
-    // 2. Ahora que ya tenemos el userId, cargamos de forma segura las tarjetas del servidor
     return api.getUserCard();
   })
   .then((cardsData) => {
     console.log("Tarjetas recibidas desde el servidor:", cardsData);
 
-    // 3. Renderizamos las tarjetas sabiendo ya quién es el usuario actual
     cardsData.forEach((item) => {
       cardsContainer.append(createCard(item));
     });
@@ -75,7 +78,6 @@ imagePopupInstance.setEventListeners();
 
 // --- FUNCIÓN PARA GENERAR TARJETAS ---
 function createCard(data) {
-  // Combinamos los datos originales con las IDs de control de autoría
   const cardData = {
     ...data,
     currentUserId: userId,
@@ -97,12 +99,6 @@ function createCard(data) {
         .catch((err) => console.error("Error al actualizar el like:", err));
     },
     (cardId, cardInstance) => {
-      console.log(
-        "¡Click en papelera detectado para la tarjeta con ID:",
-        cardId,
-      );
-
-      // Seteamos la acción en el popup de confirmación
       confirmationPopup.setAction(() => {
         api
           .deleteCard(cardId)
@@ -122,6 +118,8 @@ function createCard(data) {
 
 // --- POPUP PARA EDITAR PERFIL ---
 const editProfilePopup = new PopupWithForm("#edit-popup", (formData) => {
+  editProfilePopup.renderLoading(true); // Muestra "Guardando..."
+
   api
     .editUserProfile({
       name: formData.name,
@@ -134,12 +132,17 @@ const editProfilePopup = new PopupWithForm("#edit-popup", (formData) => {
       });
       editProfilePopup.close();
     })
-    .catch((err) => console.error("Error al editar el perfil:", err));
+    .catch((err) => console.error("Error al editar el perfil:", err))
+    .finally(() => {
+      editProfilePopup.renderLoading(false); // Restaura a "Guardar"
+    });
 });
 editProfilePopup.setEventListeners();
 
 // --- POPUP PARA AGREGAR NUEVO LUGAR ---
 const newCardPopup = new PopupWithForm("#new-card-popup", (formData) => {
+  newCardPopup.renderLoading(true); // Muestra "Guardando..."
+
   api
     .addNewCard({
       name: formData["place-name"],
@@ -149,16 +152,38 @@ const newCardPopup = new PopupWithForm("#new-card-popup", (formData) => {
       cardsContainer.prepend(createCard(newCardData));
       newCardPopup.close();
     })
-    .catch((err) => console.error("Error al añadir la nueva tarjeta:", err));
+    .catch((err) => console.error("Error al añadir la nueva tarjeta:", err))
+    .finally(() => {
+      newCardPopup.renderLoading(false); // Restaura a "Crear"
+    });
 });
 newCardPopup.setEventListeners();
+
+// --- POPUP PARA CAMBIAR FOTO DE PERFIL (AVATAR) ---
+const avatarPopup = new PopupWithForm("#avatar-popup", (formData) => {
+  avatarPopup.renderLoading(true); // Muestra "Guardando..."
+
+  api
+    .updateAvatar(formData.avatar)
+    .then((updatedUserData) => {
+      userInfo.setUserInfo({ avatar: updatedUserData.avatar });
+      avatarPopup.close();
+    })
+    .catch((err) => console.error("Error al actualizar el avatar:", err))
+    .finally(() => {
+      avatarPopup.renderLoading(false); // Restaura a "Guardar"
+    });
+});
+avatarPopup.setEventListeners();
 
 // --- VALIDACIONES DE FORMULARIOS ---
 const editProfileValidator = new FormValidator(validationConfig, profileForm);
 const addCardValidator = new FormValidator(validationConfig, addCardForm);
+const avatarValidator = new FormValidator(validationConfig, avatarForm);
 
 editProfileValidator.setEventListeners();
 addCardValidator.setEventListeners();
+avatarValidator.setEventListeners();
 
 // --- EVENTOS DE APERTURA ---
 profileEditButton.addEventListener("click", () => {
@@ -172,4 +197,8 @@ profileEditButton.addEventListener("click", () => {
 
 addCardButton.addEventListener("click", () => {
   newCardPopup.open();
+});
+
+avatarContainer.addEventListener("click", () => {
+  avatarPopup.open();
 });

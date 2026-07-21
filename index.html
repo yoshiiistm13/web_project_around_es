@@ -18,7 +18,16 @@
       </header>
       <main class="content">
         <section class="profile page__section">
-          <img class="profile__image" src="./images/avatar.jpg" alt="Avatar" />
+          <!-- Modificado: Contenedor de la foto con el botón de edición -->
+          <div class="profile__avatar-container">
+            <img
+              class="profile__image"
+              src="./images/avatar.jpg"
+              alt="Avatar"
+            />
+            <!-- Capa del lápiz que se muestra con el hover -->
+            <div class="profile__avatar-edit-icon"></div>
+          </div>
           <div class="profile__info">
             <h1 class="profile__title">Jacques Cousteau</h1>
             <button
@@ -155,6 +164,31 @@
           <h3 class="popup__title">¿Estás seguro/a?</h3>
           <button class="button popup__button" type="button">Sí</button>
           <button class="button popup__button" type="button">No</button>
+        </div>
+      </div>
+
+      <!-- Nuevo Popup: Cambiar foto de perfil -->
+      <div class="popup" id="avatar-popup">
+        <div class="popup__content">
+          <button
+            aria-label="Cerrar ventana emergente"
+            class="popup__close"
+            type="button"
+          ></button>
+          <h3 class="popup__title">Cambiar foto de perfil</h3>
+          <form class="popup__form" id="avatar-form">
+            <input
+              id="avatar-url"
+              class="popup__input popup__input_type_url"
+              name="avatar"
+              placeholder="Enlace a la imagen"
+              required
+              type="url"
+            />
+            <span class="popup__error" id="avatar-url-error"></span>
+
+            <button class="button popup__button" type="submit">Guardar</button>
+          </form>
         </div>
       </div>
     </div>

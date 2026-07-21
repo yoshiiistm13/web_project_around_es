@@ -6,8 +6,7 @@ export default class Api {
 
   getUserInfo() {
     return fetch(`${this._baseUrl}/users/me`, {
-      // ◄ CORREGIDO
-      headers: this._headers, // ◄ CORREGIDO
+      headers: this._headers,
     }).then((res) => {
       if (res.ok) {
         return res.json();
@@ -18,8 +17,7 @@ export default class Api {
 
   getUserCard() {
     return fetch(`${this._baseUrl}/cards`, {
-      // ◄ CORREGIDO
-      headers: this._headers, // ◄ CORREGIDO
+      headers: this._headers,
     }).then((res) => {
       if (res.ok) {
         return res.json();
@@ -44,24 +42,39 @@ export default class Api {
     });
   }
 
+  // MÉTODO NUEVO PARA EL AVATAR
+  updateAvatar(avatarUrl) {
+    return fetch(`${this._baseUrl}/users/me/avatar`, {
+      method: "PATCH",
+      headers: this._headers,
+      body: JSON.stringify({
+        avatar: avatarUrl,
+      }),
+    }).then((res) => {
+      if (res.ok) {
+        return res.json();
+      }
+      return Promise.reject(`Error al actualizar el avatar: ${res.status}`);
+    });
+  }
+
   addNewCard(data) {
     return fetch(`${this._baseUrl}/cards`, {
       method: "POST",
-      headers: this._headers, // Aquí ya va tu authorization y Content-Type
+      headers: this._headers,
       body: JSON.stringify({
         name: data.name,
         link: data.link,
       }),
     }).then((res) => {
       if (res.ok) {
-        return res.json(); // Si tiene éxito, devuelve el objeto que te describe el ejercicio
+        return res.json();
       }
       return Promise.reject(`Error: ${res.status}`);
     });
   }
 
   changeLikeStatus(cardId, isLiked) {
-    // Si ya tiene like (true), mandamos DELETE para quitarlo. Si no (false), mandamos PUT para ponerlo.
     const method = isLiked ? "DELETE" : "PUT";
 
     return fetch(`${this._baseUrl}/cards/${cardId}/likes`, {
@@ -69,7 +82,7 @@ export default class Api {
       headers: this._headers,
     }).then((res) => {
       if (res.ok) {
-        return res.json(); // El servidor te regresa el objeto de la tarjeta actualizado
+        return res.json();
       }
       return Promise.reject(`Error: ${res.status}`);
     });

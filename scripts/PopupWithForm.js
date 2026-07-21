@@ -1,3 +1,4 @@
+// PopupWithForm.js
 import Popup from "./Popup.js";
 
 export default class PopupWithForm extends Popup {
@@ -6,6 +7,18 @@ export default class PopupWithForm extends Popup {
     this._handleFormSubmit = handleFormSubmit;
     this._formElement = this._popupElement.querySelector(".popup__form");
     this._inputList = this._formElement.querySelectorAll(".popup__input");
+    // Capturamos el botón de submit del formulario
+    this._submitButton = this._formElement.querySelector(".popup__button");
+    this._submitButtonText = this._submitButton.textContent;
+  }
+
+  // Método para cambiar el texto del botón durante la carga
+  renderLoading(isLoading, loadingText = "Guardando...") {
+    if (isLoading) {
+      this._submitButton.textContent = loadingText;
+    } else {
+      this._submitButton.textContent = this._submitButtonText;
+    }
   }
 
   _getInputValues() {
@@ -17,7 +30,6 @@ export default class PopupWithForm extends Popup {
   }
 
   open(values = null) {
-    // Si pasamos datos (como los de UserInfo), rellenamos los inputs automáticamente
     if (values) {
       this._inputList.forEach((input) => {
         if (values[input.name] !== undefined) {
@@ -25,7 +37,6 @@ export default class PopupWithForm extends Popup {
         }
       });
     }
-    // Llamamos al open de la clase padre (Popup.js) para mostrar la ventana en la pantalla
     super.open();
   }
 
@@ -34,7 +45,7 @@ export default class PopupWithForm extends Popup {
     this._formElement.addEventListener("submit", (evt) => {
       evt.preventDefault();
       this._handleFormSubmit(this._getInputValues());
-      this.close();
+      // Eliminamos this.close() de aquí para cerrarlo solo cuando el servidor responda con éxito
     });
   }
 
