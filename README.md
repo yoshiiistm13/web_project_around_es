@@ -1,5 +1,8 @@
 # Tripleten web_project_around_es
 
+🚀 Despliegue
+El proyecto está desplegado en GitHub Pages y puede ser visitado en: https://yoshiiistm13.github.io/web_project_homeland/
+
 # 📸 Galería Interactiva - Around the US
 
 Una aplicación web dinámica que permite a los usuarios gestionar su perfil y administrar una colección de tarjetas de lugares, incluyendo funcionalidades de edición, creación, eliminación y visualización de imágenes.
