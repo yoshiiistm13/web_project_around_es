@@ -1,4 +1,4 @@
-// scripts/index.js
+// src/scripts/index.js
 
 import Card from "./Card.js";
 import FormValidator from "./FormValidator.js";
@@ -8,6 +8,10 @@ import UserInfo from "./UserInfo.js";
 import Api from "./Api.js";
 import PopupWithConfirmation from "./PopupWithConfirmation.js";
 import { validationConfig } from "./constants.js";
+
+// Resto del código...
+
+// Resto de la lógica...
 
 // --- INSTANCIA DE API ---
 const api = new Api({

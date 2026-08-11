@@ -5,7 +5,9 @@
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
     <meta content="ie=edge" http-equiv="X-UA-Compatible" />
     <title>Around The U.S.</title>
-    <link href="./pages/index.css" rel="stylesheet" />
+
+    <!-- Ruta al CSS principal (mismo nivel dentro de src) -->
+    <link rel="stylesheet" href="./pages/index.css" />
   </head>
   <body class="page">
     <div class="page__content">
@@ -18,15 +20,17 @@
       </header>
       <main class="content">
         <section class="profile page__section">
-          <!-- Modificado: Contenedor de la foto con el botón de edición -->
           <div class="profile__avatar-container">
             <img
               class="profile__image"
               src="./images/avatar.jpg"
               alt="Avatar"
             />
-            <!-- Capa del lápiz que se muestra con el hover -->
-            <div class="profile__avatar-edit-icon"></div>
+            <button
+              type="button"
+              class="profile__avatar-edit-button"
+              aria-label="Cambiar foto de perfil"
+            ></button>
           </div>
           <div class="profile__info">
             <h1 class="profile__title">Jacques Cousteau</h1>
@@ -69,6 +73,8 @@
       <footer class="footer page__section">
         <p class="footer__copyright">© 2025 Around The U.S.</p>
       </footer>
+
+      <!-- Popup Editar Perfil -->
       <div class="popup" id="edit-popup">
         <div class="popup__content">
           <button
@@ -100,13 +106,14 @@
               minlength="2"
               maxlength="200"
             />
-
             <span class="popup__error" id="profile-job-error"></span>
 
             <button class="button popup__button" type="submit">Guardar</button>
           </form>
         </div>
       </div>
+
+      <!-- Popup Nuevo Lugar -->
       <div class="popup" id="new-card-popup">
         <div class="popup__content">
           <button
@@ -136,13 +143,14 @@
               required
               type="url"
             />
-
             <span class="popup__error" id="card-url-error"></span>
 
             <button class="button popup__button" type="submit">Crear</button>
           </form>
         </div>
       </div>
+
+      <!-- Popup Ver Imagen -->
       <div class="popup" id="image-popup">
         <div class="popup__content popup__content_content_image">
           <button
@@ -154,6 +162,8 @@
           <p class="popup__caption"></p>
         </div>
       </div>
+
+      <!-- Popup Confirmación Eliminación -->
       <div class="popup" id="PopupWithConfirmation">
         <div class="popup__content">
           <button
@@ -167,7 +177,7 @@
         </div>
       </div>
 
-      <!-- Nuevo Popup: Cambiar foto de perfil -->
+      <!-- Popup Cambiar Foto de Perfil -->
       <div class="popup" id="avatar-popup">
         <div class="popup__content">
           <button
@@ -192,6 +202,8 @@
         </div>
       </div>
     </div>
+
+    <!-- Ruta al script principal dentro de scripts/ (mismo nivel dentro de src) -->
+    <script type="module" src="./scripts/index.js"></script>
   </body>
-  <script type="module" src="./scripts/index.js"></script>
 </html>
